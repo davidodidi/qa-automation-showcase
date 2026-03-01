@@ -12,14 +12,14 @@ class HomePage(BasePage):
 
     # ── Selectors ─────────────────────────────────────────────────
     HERO_HEADING = "h1"
-    ROOMS_CONTAINER = ".col-sm-3"
+    ROOMS_CONTAINER = ".hotel-room-info"
     CONTACT_FORM = "#contact"
-    CONTACT_NAME = "input[name='name']"
-    CONTACT_EMAIL = "input[name='email']"
-    CONTACT_PHONE = "input[name='phone']"
-    CONTACT_SUBJECT = "input[name='subject']"
-    CONTACT_DESCRIPTION = "textarea[name='description']"
-    CONTACT_SUBMIT = "button.btn.btn-outline-dark"
+    CONTACT_NAME = "input[data-testid='ContactName']"
+    CONTACT_EMAIL = "input[data-testid='ContactEmail']"
+    CONTACT_PHONE = "input[data-testid='ContactPhone']"
+    CONTACT_SUBJECT = "input[data-testid='ContactSubject']"
+    CONTACT_DESCRIPTION = "textarea[data-testid='ContactDescription']"
+    CONTACT_SUBMIT = "#submitContact"
     COOKIE_ACCEPT = "#cookie-accept"
 
     def __init__(self, page: Page):
@@ -61,7 +61,7 @@ class HomePage(BasePage):
 
     def assert_rooms_displayed(self) -> None:
         with allure.step("Assert hotel rooms are displayed"):
-            self.page.wait_for_selector(self.ROOMS_CONTAINER, timeout=10000)
+            self.page.wait_for_selector(self.ROOMS_CONTAINER, timeout=15000)
             expect(self.page.locator(self.ROOMS_CONTAINER).first).to_be_visible()
 
     def assert_contact_success(self) -> None:
@@ -75,9 +75,9 @@ class AdminLoginPage(BasePage):
     URL = "https://automationintesting.online/#/admin"
 
     # ── Selectors ─────────────────────────────────────────────────
-    USERNAME_INPUT = "[data-testid='username']"
-    PASSWORD_INPUT = "[data-testid='password']"
-    LOGIN_BUTTON = "[data-testid='submit']"
+    USERNAME_INPUT = "#username"
+    PASSWORD_INPUT = "#password"
+    LOGIN_BUTTON = "#doLogin"
     LOGOUT_BUTTON = "button:has-text('Logout')"
     ROOMS_HEADING = "h2:has-text('Rooms')"
 
@@ -85,8 +85,7 @@ class AdminLoginPage(BasePage):
         with allure.step(f"Login as {username}"):
             self.goto()
             self.page.wait_for_load_state("domcontentloaded")
-            # Wait for React to render the form
-            self.page.wait_for_selector(self.USERNAME_INPUT, timeout=15000)
+            self.page.wait_for_selector(self.USERNAME_INPUT, timeout=20000)
             self.fill(self.USERNAME_INPUT, username)
             self.fill(self.PASSWORD_INPUT, password)
             self.click(self.LOGIN_BUTTON)
@@ -96,7 +95,7 @@ class AdminLoginPage(BasePage):
     def login_with_invalid_credentials(self, username: str, password: str) -> None:
         with allure.step("Attempt login with invalid credentials"):
             self.goto()
-            self.page.wait_for_selector(self.USERNAME_INPUT, timeout=15000)
+            self.page.wait_for_selector(self.USERNAME_INPUT, timeout=20000)
             self.fill(self.USERNAME_INPUT, username)
             self.fill(self.PASSWORD_INPUT, password)
             self.click(self.LOGIN_BUTTON)
