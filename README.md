@@ -272,7 +272,7 @@ make report        # Allure (interactive, with step details)
 make report-robot  # Robot Framework HTML report
 ```
 
-Or view the live CI report: **[📊 Allure Report](https://YOUR_.github.io/qa-automation-showcase/allure-report)**
+Or view the live CI report: **[📊 Allure Report](https://davidodidi.github.io/qa-automation-showcase/allure-report)**
 
 ---
 
