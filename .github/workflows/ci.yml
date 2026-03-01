@@ -2,9 +2,9 @@ name: QA Automation CI Pipeline
 
 on:
   push:
-    branches: [master]
+    branches: [main, develop]
   pull_request:
-    branches: [master]
+    branches: [main, develop]
   workflow_dispatch:    # Allow manual trigger from GitHub UI
 
 # Cancel in-progress runs on new pushes to the same branch
