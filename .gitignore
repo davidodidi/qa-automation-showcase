@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment / secrets
+.env
+*.env.local
+
+# Test reports & artifacts
+reports/allure-results/
+reports/allure-html/
+reports/robot/
+reports/*.xml
+reports/*.db
+*.db
+
+# Playwright
+test-results/
+playwright-report/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

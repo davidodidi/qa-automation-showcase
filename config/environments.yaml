@@ -1,0 +1,17 @@
+dev:
+  base_url: "https://restful-booker.herokuapp.com"
+  ui_base_url: "https://automationintesting.online"
+  headless: true
+  slow_mo: 0
+
+staging:
+  base_url: "https://restful-booker.herokuapp.com"
+  ui_base_url: "https://automationintesting.online"
+  headless: true
+  slow_mo: 0
+
+prod:
+  base_url: "https://restful-booker.herokuapp.com"
+  ui_base_url: "https://automationintesting.online"
+  headless: true
+  slow_mo: 0

@@ -1,0 +1,56 @@
+name: Nightly Full Regression
+
+on:
+  schedule:
+    - cron: "0 2 * * *"    # 2:00 AM UTC every night
+  workflow_dispatch:
+
+jobs:
+  full-regression:
+    name: "🌙 Nightly Regression — ${{ matrix.browser }}"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - run: pip install -r requirements.txt
+      - run: playwright install ${{ matrix.browser }} --with-deps
+      - run: mkdir -p reports/allure-results
+
+      - name: Run ALL tests (regression suite)
+        env:
+          BROWSER: ${{ matrix.browser }}
+          HEADLESS: "true"
+        run: |
+          pytest tests/api/ tests/database/ tests/ui/ \
+            -v \
+            --tb=long \
+            -m "smoke or regression" \
+            --alluredir=reports/allure-results \
+            --junitxml=reports/nightly-${{ matrix.browser }}.xml \
+            --reruns 2 \
+            --reruns-delay 5
+
+      - name: Run Robot regression suite
+        run: |
+          python -m robot \
+            --outputdir reports/robot \
+            --include regression \
+            tests/robot/
+
+      - name: Upload nightly results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nightly-${{ matrix.browser }}
+          path: reports/
+          retention-days: 14

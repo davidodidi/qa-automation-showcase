@@ -1,0 +1,33 @@
+# ─── Test Runners ───────────────────────────────────────────────
+pytest==8.3.4
+pytest-playwright==0.6.2
+pytest-xdist==3.6.1          # parallel execution
+pytest-rerunfailures==14.0   # auto-retry flaky tests
+pytest-html==4.1.1           # HTML report
+allure-pytest==2.13.5        # Allure reporting
+
+# ─── Robot Framework ────────────────────────────────────────────
+robotframework==7.1.1
+robotframework-requests==0.9.7
+robotframework-browser==18.6.1
+
+# ─── HTTP / API ─────────────────────────────────────────────────
+httpx==0.27.2
+requests==2.32.3
+
+# ─── Data Validation ────────────────────────────────────────────
+pydantic==2.9.2
+pydantic-settings==2.6.1
+
+# ─── Database ───────────────────────────────────────────────────
+sqlalchemy==2.0.36
+aiosqlite==0.20.0
+
+# ─── Test Data ──────────────────────────────────────────────────
+faker==30.8.2
+
+# ─── Utilities ──────────────────────────────────────────────────
+python-dotenv==1.0.1
+PyYAML==6.0.2
+tenacity==9.0.0              # retry logic
+rich==13.9.4                 # beautiful console output

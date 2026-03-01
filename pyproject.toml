@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "qa-automation-showcase"
+version = "1.0.0"
+description = "Full-stack QA Automation Framework: UI + API + Database + Robot Framework"
+authors = [{ name = "David", email = "david@example.com" }]
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests/ui", "tests/api", "tests/database"]
+addopts = """
+  -v
+  --tb=short
+  --strict-markers
+  --alluredir=reports/allure-results
+"""
+markers = [
+    "smoke: fast smoke tests that run on every commit",
+    "regression: full regression suite",
+    "ui: Playwright browser tests",
+    "api: REST API tests",
+    "db: database validation tests",
+    "crud: full CRUD lifecycle tests",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

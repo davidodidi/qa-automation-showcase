@@ -1,0 +1,267 @@
+name: QA Automation CI Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:    # Allow manual trigger from GitHub UI
+
+# Cancel in-progress runs on new pushes to the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: "3.12"
+  ALLURE_VERSION: "2.29.0"
+
+jobs:
+  # ─────────────────────────────────────────────────────────────────────────────
+  # JOB 1: Lint & Type Check (fast feedback, ~1 min)
+  # ─────────────────────────────────────────────────────────────────────────────
+  lint:
+    name: "🔍 Lint & Static Analysis"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Install lint tools
+        run: pip install ruff
+
+      - name: Ruff lint check
+        run: ruff check . --output-format=github
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # JOB 2: API Tests (no browser needed, ~3 min)
+  # ─────────────────────────────────────────────────────────────────────────────
+  api-tests:
+    name: "🔌 API Tests"
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create reports directory
+        run: mkdir -p reports/allure-results
+
+      - name: Run API tests
+        run: |
+          pytest tests/api/ \
+            -v \
+            --tb=short \
+            --alluredir=reports/allure-results \
+            -m "api" \
+            --junitxml=reports/api-junit.xml
+        continue-on-error: false
+
+      - name: Upload API test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: api-test-results
+          path: |
+            reports/allure-results/
+            reports/api-junit.xml
+          retention-days: 30
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # JOB 3: Database Validation Tests (~2 min)
+  # ─────────────────────────────────────────────────────────────────────────────
+  db-tests:
+    name: "🗄️ Database Validation"
+    runs-on: ubuntu-latest
+    needs: api-tests
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create reports directory
+        run: mkdir -p reports/allure-results
+
+      - name: Run database validation tests
+        run: |
+          pytest tests/database/ \
+            -v \
+            --tb=short \
+            --alluredir=reports/allure-results \
+            -m "db" \
+            --junitxml=reports/db-junit.xml
+
+      - name: Upload DB test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: db-test-results
+          path: |
+            reports/allure-results/
+            reports/db-junit.xml
+          retention-days: 30
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # JOB 4: UI Tests — Browser Matrix (~6 min)
+  # ─────────────────────────────────────────────────────────────────────────────
+  ui-tests:
+    name: "🌐 UI Tests (${{ matrix.browser }})"
+    runs-on: ubuntu-latest
+    needs: lint
+    strategy:
+      fail-fast: false       # Run all browsers even if one fails
+      matrix:
+        browser: [chromium, firefox]   # webkit on Linux needs extra deps
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install Playwright browser — ${{ matrix.browser }}
+        run: playwright install ${{ matrix.browser }} --with-deps
+
+      - name: Create reports directory
+        run: mkdir -p reports/allure-results
+
+      - name: Run UI tests (${{ matrix.browser }})
+        env:
+          BROWSER: ${{ matrix.browser }}
+          HEADLESS: "true"
+        run: |
+          pytest tests/ui/ \
+            -v \
+            --tb=short \
+            --alluredir=reports/allure-results \
+            -m "ui" \
+            --browser=${{ matrix.browser }} \
+            --junitxml=reports/ui-${{ matrix.browser }}-junit.xml
+        continue-on-error: true    # Don't block on flaky UI tests
+
+      - name: Upload UI test results (${{ matrix.browser }})
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ui-${{ matrix.browser }}-results
+          path: |
+            reports/allure-results/
+            reports/ui-${{ matrix.browser }}-junit.xml
+          retention-days: 30
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # JOB 5: Robot Framework Suites (~3 min)
+  # ─────────────────────────────────────────────────────────────────────────────
+  robot-tests:
+    name: "🤖 Robot Framework"
+    runs-on: ubuntu-latest
+    needs: api-tests
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create reports directory
+        run: mkdir -p reports/robot
+
+      - name: Run Robot Framework suites
+        run: |
+          python -m robot \
+            --outputdir reports/robot \
+            --loglevel DEBUG \
+            --report report.html \
+            --log log.html \
+            tests/robot/api_smoke.robot \
+            tests/robot/booking_smoke.robot
+        continue-on-error: true
+
+      - name: Upload Robot Framework results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: robot-results
+          path: reports/robot/
+          retention-days: 30
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # JOB 6: Publish Allure Report to GitHub Pages
+  # ─────────────────────────────────────────────────────────────────────────────
+  publish-report:
+    name: "📊 Publish Allure Report"
+    runs-on: ubuntu-latest
+    needs: [api-tests, db-tests, ui-tests, robot-tests]
+    if: always() && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: all-results/
+
+      - name: Merge Allure results
+        run: |
+          mkdir -p merged-allure-results
+          find all-results/ -name "*.json" -o -name "*.xml" -o -name "*.png" \
+            | xargs -I{} cp {} merged-allure-results/ 2>/dev/null || true
+
+      - name: Install Allure CLI
+        run: |
+          wget -qO allure.tgz \
+            https://github.com/allure-framework/allure2/releases/download/${{ env.ALLURE_VERSION }}/allure-${{ env.ALLURE_VERSION }}.tgz
+          tar -xzf allure.tgz
+          sudo mv allure-${{ env.ALLURE_VERSION }} /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
+
+      - name: Generate Allure HTML report
+        run: allure generate merged-allure-results --clean -o allure-report
+
+      - name: Deploy Allure report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
+          destination_dir: allure-report
+
+      - name: Comment PR with report link
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '## 📊 Test Report\n\n✅ Allure report published: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure-report'
+            })
