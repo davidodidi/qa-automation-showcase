@@ -154,6 +154,28 @@ jobs:
             reports/allure-results/
             reports/db-junit.xml
           retention-days: 30
+      
+      - name: Debug — dump page HTML
+        run: |
+          python3 - <<'EOF'
+          from playwright.sync_api import sync_playwright
+          with sync_playwright() as p:
+              browser = p.chromium.launch(headless=True)
+              page = browser.new_page()
+              
+              print("=== HOME PAGE ===")
+              page.goto("https://automationintesting.online")
+              page.wait_for_load_state("networkidle")
+              print(page.content()[:3000])
+              
+              print("=== ADMIN PAGE ===")
+              page.goto("https://automationintesting.online/#/admin")
+              page.wait_for_load_state("networkidle")
+              import time; time.sleep(3)
+              print(page.content()[:3000])
+              
+              browser.close()
+          EOF
 
   # ─────────────────────────────────────────────────────────────────────────────
   # JOB 4: UI Tests — Browser Matrix (~6 min)
