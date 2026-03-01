@@ -141,8 +141,6 @@ class TestUpdateBooking:
     @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.regression
     def test_update_without_auth_returns_403(self, created_booking):
-        from tests.api.clients.booking_client import BookingClient
-        import httpx
         booking_id = created_booking["bookingid"]
         payload = factory.booking().to_dict()
 
