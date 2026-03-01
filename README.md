@@ -1,6 +1,6 @@
 # 🧪 QA Automation Showcase Framework
 
-[![CI Pipeline](https://github.com/YOUR_USERNAME/qa-automation-showcase/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/qa-automation-showcase/actions/workflows/ci.yml)
+[![CI Pipeline](https://github.com/davidodidi/qa-automation-showcase/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/qa-automation-showcase/actions/workflows/ci.yml)
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
 [![Playwright](https://img.shields.io/badge/playwright-latest-green.svg)](https://playwright.dev/)
 [![Robot Framework](https://img.shields.io/badge/Robot_Framework-7.x-red.svg)](https://robotframework.org/)
@@ -9,7 +9,7 @@
 
 > A production-grade, full-stack test automation framework covering **UI testing**, **REST API testing**, **database validation**, and **CI/CD** — built with Python, Playwright, pytest, and Robot Framework.
 
-📊 **[Live Allure Report →](https://YOUR_USERNAME.github.io/qa-automation-showcase/allure-report)**
+📊 **[Live Allure Report →](https://davidodidi.github.io/qa-automation-showcase/allure-report)**
 
 ---
 
@@ -272,7 +272,7 @@ make report        # Allure (interactive, with step details)
 make report-robot  # Robot Framework HTML report
 ```
 
-Or view the live CI report: **[📊 Allure Report](https://YOUR_USERNAME.github.io/qa-automation-showcase/allure-report)**
+Or view the live CI report: **[📊 Allure Report](https://YOUR_.github.io/qa-automation-showcase/allure-report)**
 
 ---
 
