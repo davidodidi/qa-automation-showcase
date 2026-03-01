@@ -56,8 +56,9 @@ class BasePage:
     # ── Assertions (thin wrappers for readability) ────────────────
 
     def assert_url_contains(self, fragment: str) -> None:
-        with allure.step(f"Assert URL contains '{fragment}'"):
-            expect(self.page).to_have_url(lambda url: fragment in url)
+    with allure.step(f"Assert URL contains '{fragment}'"):
+        import re
+        expect(self.page).to_have_url(re.compile(f".*{fragment}.*"))
 
     def assert_title_contains(self, text: str) -> None:
         with allure.step(f"Assert title contains '{text}'"):
