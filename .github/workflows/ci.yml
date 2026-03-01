@@ -70,6 +70,12 @@ jobs:
             sleep 3
           done
 
+        name: Test auth against local API
+        run: |
+          curl -v -X POST http://localhost:3001/auth \
+            -H "Content-Type: application/json" \
+            -d '{"username":"admin","password":"password"}'
+
       - name: Create reports directory
         run: mkdir -p reports/allure-results
 
