@@ -6,6 +6,7 @@ Each test is independently repeatable and cleans up after itself.
 """
 import pytest
 import allure
+import httpx
 
 from utils.assertions import (
     assert_status,
