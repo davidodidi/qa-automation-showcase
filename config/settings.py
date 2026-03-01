@@ -33,7 +33,7 @@ class Settings(BaseSettings):
 
     # ── Auth Credentials ─────────────────────────────────────────
     admin_username: str = Field(default="admin")
-    admin_password: str = Field(default="password")
+    admin_password: str = Field(default="password123")
 
     # ── Browser Settings ─────────────────────────────────────────
     browser: str = Field(default="chromium", description="chromium | firefox | webkit")
