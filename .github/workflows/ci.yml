@@ -255,7 +255,7 @@ jobs:
     name: "📊 Publish Allure Report"
     runs-on: ubuntu-latest
     needs: [api-tests, db-tests, ui-tests, robot-tests]
-    if: always() && github.ref == 'refs/heads/master'
+    if: always() && github.ref == 'refs/heads/main'
     permissions:
       contents: write
 
