@@ -64,7 +64,6 @@ jobs:
             -v \
             --tb=short \
             --alluredir=reports/allure-results \
-            -m "api" \
             --junitxml=reports/api-junit.xml
         continue-on-error: false
 
