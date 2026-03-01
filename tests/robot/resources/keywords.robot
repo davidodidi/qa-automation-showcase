@@ -15,13 +15,13 @@ Create API Session
 
 Get Auth Token
     [Documentation]    Authenticates with admin credentials and returns a token.
-    RETURN          ${token}
     ${body}=          Create Dictionary    username=${ADMIN_USER}    password=${ADMIN_PASSWORD}
     ${resp}=          POST On Session    booking_api    /auth    json=${body}
     Should Be Equal As Integers    ${resp.status_code}    200
     ${token}=         Get From Dictionary    ${resp.json()}    token
     Should Not Be Empty    ${token}
     Log    Obtained auth token: ${token}
+    RETURN    ${token}
 
 # ─── Booking Helpers ──────────────────────────────────────────────────────────
 
