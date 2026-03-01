@@ -15,7 +15,7 @@ Create API Session
 
 Get Auth Token
     [Documentation]    Authenticates with admin credentials and returns a token.
-    [Return]          ${token}
+    RETURN          ${token}
     ${body}=          Create Dictionary    username=${ADMIN_USER}    password=${ADMIN_PASSWORD}
     ${resp}=          POST On Session    booking_api    /auth    json=${body}
     Should Be Equal As Integers    ${resp.status_code}    200
@@ -42,7 +42,7 @@ Build Booking Payload
     ...               depositpaid=${deposit}
     ...               bookingdates=${dates}
     ...               additionalneeds=${needs}
-    [Return]    ${payload}
+    RETURN    ${payload}
 
 Create Booking And Get ID
     [Documentation]    Creates a booking and returns the booking ID.
@@ -51,13 +51,13 @@ Create Booking And Get ID
     Should Be Equal As Integers    ${resp.status_code}    200
     ${booking_id}=    Get From Dictionary    ${resp.json()}    bookingid
     Log    Created booking with ID: ${booking_id}
-    [Return]    ${booking_id}
+    RETURN    ${booking_id}
 
 Get Booking By ID
     [Documentation]    Fetches a single booking and returns the response.
     [Arguments]    ${booking_id}
     ${resp}=    GET On Session    booking_api    /booking/${booking_id}
-    [Return]    ${resp}
+    RETURN    ${resp}
 
 Delete Booking
     [Documentation]    Deletes a booking using the auth token cookie.

@@ -4,7 +4,7 @@ ${BASE_URL}             https://restful-booker.herokuapp.com
 ${AUTH_ENDPOINT}        ${BASE_URL}/auth
 ${BOOKING_ENDPOINT}     ${BASE_URL}/booking
 ${ADMIN_USER}           admin
-${ADMIN_PASSWORD}       password
+${ADMIN_PASSWORD}       password123
 
 # ─── UI Settings ───────────────────────────────────────────────────────────────
 ${UI_BASE_URL}          https://automationintesting.online
