@@ -2,9 +2,9 @@ name: QA Automation CI Pipeline
 
 on:
   push:
-    branches: [main, develop]
+    branches: [master]
   pull_request:
-    branches: [main]
+    branches: [master]
   workflow_dispatch:    # Allow manual trigger from GitHub UI
 
 # Cancel in-progress runs on new pushes to the same branch
@@ -218,7 +218,7 @@ jobs:
     name: "📊 Publish Allure Report"
     runs-on: ubuntu-latest
     needs: [api-tests, db-tests, ui-tests, robot-tests]
-    if: always() && github.ref == 'refs/heads/main'
+    if: always() && github.ref == 'refs/heads/master'
     permissions:
       contents: write
 
