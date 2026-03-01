@@ -58,6 +58,17 @@ jobs:
       - name: Create reports directory
         run: mkdir -p reports/allure-results
 
+      - name: Debug auth endpoint
+        run: |
+          curl -s -X POST https://restful-booker.herokuapp.com/auth \
+            -H "Content-Type: application/json" \
+            -d '{"username":"admin","password":"password"}' \
+            | cat
+
+      - name: Run API tests
+        run: |
+          pytest tests/api/ \
+
       - name: Run API tests
         run: |
           pytest tests/api/ \
