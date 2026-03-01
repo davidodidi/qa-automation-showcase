@@ -7,7 +7,7 @@ Uses Faker under the hood so data is always unique across parallel runs.
 from __future__ import annotations
 
 import random
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, asdict
 from datetime import date, timedelta
 from faker import Faker
 

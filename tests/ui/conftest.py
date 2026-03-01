@@ -7,7 +7,7 @@ Screenshots are captured automatically on failure.
 from __future__ import annotations
 import pytest
 import allure
-from playwright.sync_api import Browser, BrowserContext, Page, Playwright
+from playwright.sync_api import Page
 
 from config.settings import settings
 from tests.ui.pages.home_page import HomePage, AdminLoginPage

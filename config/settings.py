@@ -4,7 +4,7 @@ Values are loaded from environment variables or a .env file.
 Override per environment by setting ENV=staging|prod.
 """
 from functools import lru_cache
-from pydantic import Field, HttpUrl
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 

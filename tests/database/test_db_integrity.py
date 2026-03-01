@@ -16,8 +16,6 @@ Test flow (the "holy trinity" of QA):
 import pytest
 import allure
 
-from tests.database.db_client import DBClient
-from tests.api.clients.booking_client import BookingClient
 from utils.assertions import (
     assert_status,
     assert_db_record_exists,

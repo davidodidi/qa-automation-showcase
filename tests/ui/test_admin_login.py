@@ -7,7 +7,7 @@ import pytest
 import allure
 from faker import Faker
 
-from tests.ui.pages.home_page import AdminLoginPage, AdminRoomsPage
+from tests.ui.pages.home_page import AdminLoginPage
 
 fake = Faker()
 

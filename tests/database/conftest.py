@@ -1,7 +1,6 @@
 import pytest
 from tests.database.db_client import DBClient
 from tests.api.clients.booking_client import BookingClient
-from utils.data_factory import factory
 
 
 @pytest.fixture(scope="session")
