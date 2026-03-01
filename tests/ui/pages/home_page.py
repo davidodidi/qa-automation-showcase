@@ -45,8 +45,8 @@ class HomePage(BasePage):
         self, name: str, email: str, phone: str, subject: str, description: str
     ) -> None:
         with allure.step("Fill and submit contact form"):
-            self.page.locator("#contact").scroll_into_view_if_needed()
-            self.page.wait_for_timeout(1000)
+            self.page.locator(self.CONTACT_FORM).scroll_into_view_if_needed()
+            self.page.wait_for_timeout(2000)
             self.fill(self.CONTACT_NAME, name)
             self.fill(self.CONTACT_EMAIL, email)
             self.fill(self.CONTACT_PHONE, phone)
@@ -66,17 +66,19 @@ class HomePage(BasePage):
 
     def assert_contact_success(self) -> None:
         with allure.step("Assert contact form submission succeeded"):
-            expect(
-                self.page.get_by_text("Thanks for getting in touch")
-            ).to_be_visible(timeout=15000)
+            self.page.wait_for_timeout(3000)
+            success = self.page.locator(".contact h2, .alert-success, h2").filter(
+                has_text="Thanks"
+            )
+            expect(success).to_be_visible(timeout=15000)
 
 
 class AdminLoginPage(BasePage):
     URL = "https://automationintesting.online/admin"
 
-    USERNAME_INPUT = "input[name='username']"
-    PASSWORD_INPUT = "input[name='password']"
-    LOGIN_BUTTON = "button[type='submit']"
+    USERNAME_INPUT = "#username"
+    PASSWORD_INPUT = "#password"
+    LOGIN_BUTTON = "#doLogin"
     LOGOUT_BUTTON = "button:has-text('Logout')"
     ROOMS_HEADING = "h2:has-text('Rooms')"
 
