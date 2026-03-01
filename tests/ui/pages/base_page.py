@@ -62,6 +62,8 @@ class BasePage:
 
     def assert_title_contains(self, text: str) -> None:
         with allure.step(f"Assert title contains '{text}'"):
+            import re
+            expect(self.page).to_have_title(re.compile(f".*{text}.*"))
 
     def assert_element_visible(self, selector: str) -> None:
         with allure.step(f"Assert visible: {selector}"):
