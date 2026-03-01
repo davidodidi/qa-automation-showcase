@@ -64,7 +64,7 @@ jobs:
             -v \
             --tb=short \
             --alluredir=reports/allure-results \
-            
+            -m "api" \
             --junitxml=reports/api-junit.xml
         continue-on-error: false
 
@@ -105,7 +105,7 @@ jobs:
             -v \
             --tb=short \
             --alluredir=reports/allure-results \
-            
+            -m "db" \
             --junitxml=reports/db-junit.xml
 
       - name: Upload DB test results
@@ -156,7 +156,7 @@ jobs:
             -v \
             --tb=short \
             --alluredir=reports/allure-results \
-            
+            -m "ui" \
             --browser=${{ matrix.browser }} \
             --junitxml=reports/ui-${{ matrix.browser }}-junit.xml
         continue-on-error: true    # Don't block on flaky UI tests
