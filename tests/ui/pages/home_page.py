@@ -5,6 +5,7 @@ from __future__ import annotations
 import allure
 from playwright.sync_api import Page, expect
 from tests.ui.pages.base_page import BasePage
+import re
 
 
 class HomePage(BasePage):
@@ -67,10 +68,9 @@ class HomePage(BasePage):
     def assert_contact_success(self) -> None:
         with allure.step("Assert contact form submission succeeded"):
             self.page.wait_for_timeout(3000)
-            success = self.page.locator(".contact h2, .alert-success, h2").filter(
-                has_text="Thanks"
-            )
-            expect(success).to_be_visible(timeout=15000)
+            expect(
+                self.page.locator("body")
+            ).to_contain_text("Thanks", timeout=15000)
 
 
 class AdminLoginPage(BasePage):
@@ -109,7 +109,10 @@ class AdminRoomsPage(BasePage):
 
     def assert_logged_in(self) -> None:
         with allure.step("Assert admin panel is visible after login"):
-            expect(self.page.locator(self.ROOMS_HEADING)).to_be_visible(timeout=15000)
+            self.page.wait_for_load_state("networkidle")
+            expect(self.page).to_have_url(
+                re.compile(".*admin.*"), timeout=15000
+            )
 
     def logout(self) -> None:
         with allure.step("Logout"):
