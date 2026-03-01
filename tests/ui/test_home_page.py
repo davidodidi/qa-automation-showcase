@@ -67,7 +67,7 @@ class TestContactForm:
         home_page.submit_contact_form(
             name=fake.name(),
             email=fake.email(),
-            phone=fake.phone_number()[:11],
+            phone="01234567890",
             subject="Automated Test Inquiry",
             description="This is an automated test message. " * 3,
         )
