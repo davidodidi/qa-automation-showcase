@@ -184,7 +184,7 @@ jobs:
       - name: Create reports directory
         run: mkdir -p reports/allure-results
 
-      - name: Debug — dump page HTML
+      - name: Debug — dump admin page HTML
         run: |
           python3 - <<'EOF'
           import time
@@ -192,13 +192,18 @@ jobs:
           with sync_playwright() as p:
               browser = p.chromium.launch(headless=True)
               page = browser.new_page()
-              
               print("=== ADMIN PAGE ===")
-              page.goto("https://automationintesting.online/#/admin")
+              page.goto("https://automationintesting.online/admin")
               page.wait_for_load_state("networkidle")
               time.sleep(5)
-              print(page.content()[2000:6000])
-              
+              print(page.content()[3000:8000])
+              print("=== CONTACT FORM ===")
+              page.goto("https://automationintesting.online")
+              page.wait_for_load_state("networkidle")
+              time.sleep(3)
+              content = page.content()
+              contact_idx = content.find("contact")
+              print(content[contact_idx:contact_idx+3000])
               browser.close()
           EOF
 
