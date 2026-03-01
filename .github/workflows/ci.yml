@@ -44,6 +44,13 @@ jobs:
     name: "🔌 API Tests"
     runs-on: ubuntu-latest
     needs: lint
+
+    services:
+      restful-booker:
+        image: mwinteringham/restfulbooker
+        ports:
+          - 3001:3001
+
     steps:
       - uses: actions/checkout@v4
 
@@ -55,28 +62,26 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Wait for API to be ready
+        run: |
+          for i in {1..15}; do
+            curl -s http://localhost:3001/booking && break
+            echo "Waiting for API... attempt $i"
+            sleep 3
+          done
+
       - name: Create reports directory
         run: mkdir -p reports/allure-results
 
-      - name: Debug auth endpoint
-        run: |
-          curl -s -X POST https://restful-booker.herokuapp.com/auth \
-            -H "Content-Type: application/json" \
-            -d '{"username":"admin","password":"password"}' \
-            | cat
-
       - name: Run API tests
-        run: |
-          pytest tests/api/ \
-
-      - name: Run API tests
+        env:
+          BASE_URL: http://localhost:3001
         run: |
           pytest tests/api/ \
             -v \
             --tb=short \
             --alluredir=reports/allure-results \
             --junitxml=reports/api-junit.xml
-        continue-on-error: false
 
       - name: Upload API test results
         uses: actions/upload-artifact@v4
@@ -95,6 +100,13 @@ jobs:
     name: "🗄️ Database Validation"
     runs-on: ubuntu-latest
     needs: api-tests
+
+    services:
+      restful-booker:
+        image: mwinteringham/restfulbooker
+        ports:
+          - 3001:3001
+
     steps:
       - uses: actions/checkout@v4
 
@@ -106,16 +118,25 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Wait for API to be ready
+        run: |
+          for i in {1..15}; do
+            curl -s http://localhost:3001/booking && break
+            echo "Waiting for API... attempt $i"
+            sleep 3
+          done
+
       - name: Create reports directory
         run: mkdir -p reports/allure-results
 
       - name: Run database validation tests
+        env:
+          BASE_URL: http://localhost:3001
         run: |
           pytest tests/database/ \
             -v \
             --tb=short \
             --alluredir=reports/allure-results \
-            -m "db" \
             --junitxml=reports/db-junit.xml
 
       - name: Upload DB test results
