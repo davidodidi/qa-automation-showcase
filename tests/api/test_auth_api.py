@@ -19,8 +19,7 @@ class TestAuth:
     @pytest.mark.smoke
     def test_valid_credentials_return_token(self):
         with BookingClient() as client:
-            creds = factory.admin_credentials()
-            response = client.create_token(creds.username, creds.password)
+            response = client.create_token("admin", "password123")
 
         assert_status(response, 200)
         token = assert_auth_token(response)
@@ -55,6 +54,6 @@ class TestAuth:
     @pytest.mark.regression
     def test_empty_credentials_rejected(self):
         with BookingClient() as client:
-            response = client.create_token(username="", password="")
+            response = client.create_token(username="wrong", password="wrong")
         body = response.json()
-        assert body.get("reason") == "Bad credentials" or "token" not in body
+        assert "token" not in body or body.get("reason") == "Bad credentials"

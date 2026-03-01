@@ -85,7 +85,7 @@ class DataFactory:
     @staticmethod
     def admin_credentials() -> AuthPayload:
         """Return the well-known admin credentials for Restful-Booker."""
-        return AuthPayload(username="admin", password="password")
+        return AuthPayload(username="admin", password="password123")
 
     @staticmethod
     def invalid_credentials() -> AuthPayload:
