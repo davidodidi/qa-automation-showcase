@@ -1,10 +1,10 @@
 # 🧪 QA Automation Showcase Framework
 
-[![CI Pipeline](https://github.com/davidodidi/qa-automation-showcase/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/qa-automation-showcase/actions/workflows/ci.yml)
+[![CI Pipeline](https://github.com/davidodidi/qa-automation-showcase/actions/workflows/ci.yml/badge.svg)](https://github.com/davidodidi/qa-automation-showcase/actions/workflows/ci.yml)
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
 [![Playwright](https://img.shields.io/badge/playwright-latest-green.svg)](https://playwright.dev/)
 [![Robot Framework](https://img.shields.io/badge/Robot_Framework-7.x-red.svg)](https://robotframework.org/)
-[![Allure Report](https://img.shields.io/badge/report-Allure-brightgreen.svg)](https://YOUR_USERNAME.github.io/qa-automation-showcase/allure-report)
+[![Allure Report](https://img.shields.io/badge/report-Allure-brightgreen.svg)](https://davidodidi.github.io/qa-automation-showcase/allure-report)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > A production-grade, full-stack test automation framework covering **UI testing**, **REST API testing**, **database validation**, and **CI/CD** — built with Python, Playwright, pytest, and Robot Framework.
@@ -294,4 +294,4 @@ Pydantic v2 gives us automatic type coercion, clear validation errors, and schem
 
 ## 📜 License
 
-MIT — feel free to use this as a template for your own projects.
+MIT — feel free to use this as a template for  own projects.
