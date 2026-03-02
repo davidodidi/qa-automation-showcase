@@ -1,0 +1,1 @@
+{'bookingid': 12, 'booking': {'firstname': 'Amy', 'lastname': 'Richardson', 'totalprice': 127, 'depositpaid': False, 'bookingdates': {'checkin': '2026-03-28', 'checkout': '2026-04-04'}, 'additionalneeds': 'Dinner'}}
